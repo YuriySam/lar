@@ -8,18 +8,19 @@ use App\Models\Post;
 
 class PostController extends Controller
 {
-    public function index(){   
-        $post=Post::find(1);
+    public function index()
+    {
+        $post = Post::find(1);
         $str = 'string';
         var_dump($str);
         echo $post->content;
-        echo "<BR> likes= ".$post->likes;
+        echo "<BR> likes= " . $post->likes;
         echo "<BR>";
 
         $posts = Post::all();
-        
-        foreach($posts as $post ){
-            dump('forich= '.$post->title);
+
+        foreach ($posts as $post) {
+            dump('forich= ' . $post->title);
         }
 
         $posts_new = Post::where('is_published', 1)->get();
@@ -28,11 +29,12 @@ class PostController extends Controller
 
 
         echo 'posts_new';
-        dd( $posts_new);
+        dd($posts_new);
         return 'this is my post';
     }
 
-    public function create(){
+    public function create()
+    {
         $postArr = [
             [
                 'title' => 'title of post from vscode',
@@ -50,21 +52,21 @@ class PostController extends Controller
             ]
 
         ];
-            foreach($postArr as $item){
-                Post::create($item);
-            }
-            
-            dd('created');
-        
+        foreach ($postArr as $item) {
+            Post::create($item);
+        }
+
+        dd('created');
     }
-    public function update(){
+    public function update()
+    {
 
         $post = Post::find(6);
         $post->update(
             [
-               
+
                 'content' => '2updated',
-               
+
             ]
         );
         dd('updated');
@@ -83,5 +85,64 @@ class PostController extends Controller
         $post->restore();
 
         dd('undelete psge  ' . $post->id);
+    }
+
+    //firstOrCreate - створення запиту без дублікатів за певними умовами
+    //updateOrCreate - чи оновлення чи створення за заданими атрибутами
+
+    public function firstOrCreate()
+    {
+        //$post = Post::find(1);
+        $anotherPost = [
+            'title' => 'title of post from vscode',
+            'content' => 'some interesting content',
+            'image' => 'imaget1.jpg',
+            'likes' => '15',
+            'is_published' => '1'
+
+        ];
+        $post = Post::firstOrCreate(
+            [
+                'title' => '22title of post from vscode',
+            ],[
+
+                'title' => '22title of post from vscode',
+                'content' => 'some interesting content',
+                'image' => 'imaget1.jpg',
+                'likes' => '150',
+                'is_published' => '1'
+
+            ]
+
+        );
+
+
+        dd('firstOrCreate records id= '. $post->id);
+    }
+
+    //updateOrCreate - чи оновлення чи створення за заданими атрибутами
+
+    public function updateOrCreate()
+    {
+        //dd('updateOrCreate');
+       
+        $post = Post::updateOrCreate(
+            [
+                'title' => 'updateOrCreate 22title of post from vscode',
+            ],
+            [
+
+                'title' => 'updateOrCreate 22title of post from vscode',
+                'content' => 'updateOrCreate some interesting content',
+                'image' => 'imaget1.jpg',
+                'likes' => '150',
+                'is_published' => '1'
+
+            ]
+
+        );
+
+
+        dd('updateOrCreate records id= ' . $post->id);
     }
 }
